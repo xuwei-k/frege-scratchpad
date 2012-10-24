@@ -1,0 +1,19 @@
+module com.earldouglas.fregeweb.FregeWeb where
+
+import frege.IO
+
+data Request = Request { method :: String, uri :: String, headers :: [Header], parameters :: [Parameter], body :: [Byte] }
+data Response = Response { status :: Int, headers :: [Header], parameters :: [Parameter], body :: [Byte] }
+data Header = Header { name :: String, value :: String }
+data Parameter = Parameter { name :: String, value :: String }
+
+service :: Request -> Response
+service (Request "GET" "/" _ _ _) = response 200 [] [] $ map byte $ unpacked "<a href=\"hello\">hello</a>"
+service (Request "GET" "/hello" _ _ _) = response 200 [] [] $ map byte $ unpacked "Hello, world!"
+service _ = response 404 [] [] $ map byte $ unpacked "404'd!"
+
+response :: Int -> [Header] -> [Parameter] -> [Byte] -> Response
+response status headers parameters body = Response { status = status, headers = headers, parameters = parameters, body = body }
+
+data Byte = native byte
+pure native byte "(byte)" :: Char -> Byte
