@@ -1,0 +1,27 @@
+package io.Interact where
+
+import frege.IO
+
+type Scanner = ScannerS RealWorld
+data ScannerS s = native java.util.Scanner where
+    pure native new     :: InputStream -> Scanner
+    native nextLine     :: Scanner -> IO (Exception String)
+    native useDelimiter :: Scanner -> String -> IO (Scanner)  
+  
+interact :: (String -> String) -> IO ()
+interact f = do
+    ins <- stdin
+    let scnr = Scanner.new ins
+    nxt <- Scanner.nextLine scnr
+    case nxt of
+      (Right str) -> do
+        print (f str)
+        interact f
+      (Left _) -> return ()
+
+repeatStr :: String -> String
+repeatStr x = x ++ x
+
+main :: [String] -> IO ()
+main _ = interact repeatStr
+    

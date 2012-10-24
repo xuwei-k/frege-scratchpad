@@ -1,0 +1,21 @@
+package Data.MapTest where
+
+import frege.Prelude hiding (empty, !!, join, null, toList, filter, map)
+import Data.Map
+
+main :: [String] -> IO ()
+main _ = do
+  let m1 = empty
+  println $ "size m1: " ++ (show $ size m1)
+  let m2 = singleton 1 "2"
+  println $ "size m2: " ++ (show $ size m2)
+  println $ "find 1 m2: " ++ (find 1 m2)
+  --println $ "find 1 m2: " ++ (m2 ! 1)
+  let m3 = insert 3 "4" $ singleton 1 "2"
+  println $ "size m2: " ++ (show $ size m2)
+  println $ "size m3: " ++ (show $ size m3)
+  println $ "find 1 m3: " ++ (find 1 m3)
+  println $ "m3 !! 1: " ++ (m3 !! 1)
+  --Mapprintln $ "find 2 m3: " ++ (find 2 m3)
+  println $ "find 3 m3: " ++ (find 3 m3)
+  

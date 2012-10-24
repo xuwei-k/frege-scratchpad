@@ -1,0 +1,51 @@
+module test.Model where
+
+data MyJFregeIterator s = native JFregeIterator where
+    pure native new JFregeIterator.getInstance :: [t] -> (MyJFregeIterator s)
+
+data Sample = Sample {city::String, amount::Int}
+
+sampleList = [Sample "Paris" 2, Sample "Berlin" 3, Sample  "Barcelona" 1]
+    
+data JModelRoot myStructure s = native ModelRoot where
+        -- instance methods
+        native getModelStructure :: JModelRoot myStructure RealWorld -> IO myStructure
+        native setModelStructure :: JModelRoot myStructure RealWorld -> myStructure -> IO ()
+
+type MyStructure = [Sample] 
+type MyModelRoot = JModelRoot MyStructure RealWorld
+        
+-- static methods
+native initSingleton ModelRoot.initSingleton :: MyStructure -> IO MyModelRoot
+native getInstance ModelRoot.getInstance :: () -> IO (Maybe MyModelRoot)
+
+modelInit () = ST.performUnsafe (initSingleton( sampleList))
+
+modelAdd :: String -> Int -> ()
+modelAdd mycity amt = ST.performUnsafe (modelDoAdd mycity amt)
+
+modelDoAdd :: String -> Int -> IO ()
+modelDoAdd mycity amt 
+	= do
+		maybeInstance <- getInstance ()
+		case maybeInstance of
+                Nothing -> error "you should initialise modelRoot first"
+                Just modelRoot -> do {
+			myList <- modelRoot.getModelStructure ;
+			modelRoot.setModelStructure ((Sample mycity amt) : myList) ;
+		}
+
+modelGetListIterator () = ST.performUnsafe (modelReturnListIterator ())
+
+modelReturnListIterator :: () -> IO (MyJFregeIterator RealWorld)
+modelReturnListIterator ()
+	= do
+		myInstance <- getInstance ()
+		case myInstance of
+                Nothing -> error "you should initialise modelRoot first"
+                Just modelRoot -> do {
+			myList <- modelRoot.getModelStructure ;
+			return (MyJFregeIterator.new (myList :: MyStructure)) ;
+		}
+	
+		

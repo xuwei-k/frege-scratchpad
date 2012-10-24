@@ -1,0 +1,29 @@
+-- http://code.google.com/p/frege/issues/detail?id=33
+
+package http.SimpleHttp where
+
+import frege.IO
+
+main :: [String] -> IO ()
+main _ = simpleHttp "http://www.google.com/" >>= print
+
+simpleHttp :: String -> IO (String)
+simpleHttp urlStr = do
+    url <- url urlStr
+    case url of
+        Left ex -> throw ex
+        Right u -> do
+            stream <- URL.openStream u
+            case stream of
+                Left ex -> throw ex
+                Right s -> do
+                    isr   <- InputStreamReader.new s
+                    br    <- BufferedReader.fromISR isr
+                    lines <- BufferedReader.getlines br
+                    return $ fold' (++) "" $ map (++ "\n") lines
+
+native url new :: String -> IO (Exception URL)
+
+type URL' = URLS' RealWorld
+data URLS' s = native java.net.URL where
+    native new :: String -> IO (Exception URL)

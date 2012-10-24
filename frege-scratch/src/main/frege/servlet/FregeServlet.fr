@@ -1,0 +1,13 @@
+package servlet.FregeServlet where
+
+type HttpServletRequest = HttpServletRequestT RealWorld
+data HttpServletRequestT s = native javax.servlet.http.HttpServletRequest where
+    native getMethod :: HttpServletRequest -> IO String
+
+type HttpServletResponse = HttpServletResponseT RealWorld
+data HttpServletResponseT s = native javax.servlet.http.HttpServletResponse where
+    write :: String -> IO ()
+    write s = return ()
+
+service :: HttpServletRequest -> HttpServletResponse -> IO (Exception ())
+service req res = return $ Right ()
