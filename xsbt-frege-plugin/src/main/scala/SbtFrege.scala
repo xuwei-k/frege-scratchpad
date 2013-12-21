@@ -25,6 +25,9 @@ object SbtFrege extends Plugin {
     frege.compiler.Main.main(fregeArgs.toArray)
   }
 
+  private[this] val fregeV = "3.21.297"
+  private[this] val fregeHash = "g6b54457"
+
   val fregeSettings = Seq(
       fregeOptions := Seq("-Xss1m")
     , fregeSource in Compile <<= (sourceDirectory in Compile)( _  / "frege" )

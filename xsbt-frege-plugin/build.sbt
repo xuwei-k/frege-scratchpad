@@ -8,9 +8,9 @@ organization := "com.earldouglas"
 
 ScriptedPlugin.scriptedSettings
 
-resolvers += "jamesearldouglas" at "http://jamesearldouglas.github.com/maven-repo"
+ScriptedPlugin.scriptedBufferLog := false
 
-libraryDependencies += "frege" % "fregec" % "3.19.157"
+val fregeV = "3.21.297"
+val fregeHash = "g6b54457"
 
-publishTo := Some(Resolver.file("file",  new File("target/maven-repo")))
-
+libraryDependencies += "frege" % "frege" % fregeV % "provided" from s"https://github.com/Frege/frege/releases/download/${fregeV}/frege${fregeV}-${fregeHash}.jar"
